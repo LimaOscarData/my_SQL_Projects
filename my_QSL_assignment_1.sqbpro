@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/oscar/Desktop/chinook.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached><db schema="araclar" path="/Users/oscar/Desktop/araclar.db"/></attached><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3268"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/><expanded_item id="4" parent="1"/></tab_structure><tab_browse><current_table name="4,6:maintracks"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="albums" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="51"/><column index="2" value="300"/><column index="3" value="48"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="tracks" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="48"/><column index="2" value="300"/><column index="3" value="51"/><column index="4" value="75"/><column index="5" value="49"/><column index="6" value="300"/><column index="7" value="73"/><column index="8" value="63"/><column index="9" value="57"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">SELECT * FROM invoices ;
+
+--1. Write a query that displays InvoiceId, CustomerId and total dollar amount for each invoice, 
+--sorted first by CustomerId (in ascending order), and then by total dollar amount  (in descending order).
+SELECT InvoiceId, CustomerId, total
+FROM invoices
+ORDER BY CustomerId ASC, total DESC;
+
+--2. Write a query that displays InvoiceId, CustomerId and total dollar amount for each invoice, but this time 
+--sorted first by total dollar amount (in descending order), and then by CustomerId (in ascending order).
+SELECT InvoiceId, CustomerId, total
+FROM invoices
+ORDER BY total DESC, CustomerId ASC;
+
+--3. Compare the results of these two queries above. How are the results different when you switch the column 
+--you sort on first? (Explain it in your own words.)
+--when you sort, the first command will executed, if there is same values in this column other command will be 
+--executed. If there is no same values in the column, second command wont be executed.
+
+--4. Write a query to pull the first 10 rows and all columns from the invoices table that have a dollar amount 
+--of total greater than or equal to 10.
+SELECT *
+FROM invoices
+WHERE total &gt;= 10
+LIMIT 10;
+
+--5. Write a query to pull the first 5 rows and all columns from the invoices table that have a dollar 
+--amount of total less than 10.
+SELECT *
+FROM invoices
+WHERE total &lt;10
+LIMIT 5;
+
+SELECT * FROM tracks;
+--6. Find all track names that start with 'B' and end with 's'.
+SELECT name
+FROM tracks
+WHERE name like &quot;b%s&quot; ;
+
+SELECT * FROM invoices;
+--7. Use the invoices table to find all information regarding invoices whose billing address is USA or 
+--Germany or Norway or Canada and invoice date is at any point in 2010, sorted from newest to oldest.
+SELECT *
+FROM invoices
+where BillingCountry in (&quot;USA&quot;, &quot;Germany&quot;, &quot;Norway&quot;, &quot;Canada&quot;) 
+AND InvoiceDate BETWEEN &quot;2010-01-01 00:00:00&quot; AND &quot;2010-12-31 00:00:00&quot;
+ORDER BY InvoiceDate DESC ;
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
