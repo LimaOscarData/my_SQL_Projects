@@ -50,4 +50,4 @@ FROM tracks as tr
 INNER JOIN albums as al
 ON tr.AlbumId=al.AlbumId
 WHERE tr.Milliseconds&gt;70*60000
-GROUP BY my_title;</sql><current_tab id="0"/></tab_sql></sqlb_project>
+GROUP BY my_title;
