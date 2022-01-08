@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/Users/oscar/Desktop/chinook.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3268"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,6:mainalbums"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="albums" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="51"/><column index="2" value="300"/><column index="3" value="48"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">--Single-Row Subqueries:
+--1. Write a query to find the maximum duration among the tracks. Your query should include TrackId, 
+--Name, Milliseconds.
+
+SELECT TrackId,name, Milliseconds
+FROM tracks
+WHERE Milliseconds=(SELECT max(Milliseconds)
+											FROM tracks);
+
+--2.Write a query to find the minimum duration among the tracks. Your query should include TrackId, Name, Milliseconds.											
+
+SELECT TrackId, name, Milliseconds
+FROM tracks
+WHERE Milliseconds=(SELECT min(Milliseconds)
+											FROM tracks);
+
+--3.Write a query to find the tracks whose bytes are higher than the average of the bytes of all tracks. Your query 
+--should include TrackId, Name, Bytes, general average and should be ordered by Bytes from highest to lowest. 
+--General average is the average of all tracks. General average should repeat in every row. (Hint: You need to 
+--use two subqueries)												
+
+SELECT TrackId, name, (SELECT avg(Milliseconds)
+											FROM tracks) as general_avg, Bytes
+FROM tracks
+WHERE Bytes &gt; (SELECT avg(Bytes)
+									FROM tracks) 
+ORDER BY Bytes DESC;
+
+--4. Multiple-Row Subqueries:
+-- Write a query that returns the customers whose sales representatives are Jane Peacock and 
+-- Margaret Park. Your query should include CustomerID, First Name and Last Name of the customers.
+
+SELECT CustomerId, FirstName, LastName
+FROM customers
+WHERE SupportRepId in (SELECT EmployeeId
+													FROM employees
+													WHERE FirstName=&quot;Jane&quot; AND LastName=&quot;Peacock&quot; or 
+																	  FirstName=&quot;Margaret&quot; AND LastName=&quot;Park&quot;);
+
+--Rewrite the subquery above using the JOIN.
+
+SELECT c.CustomerId, c.FirstName, c.LastName
+FROM customers as c
+INNER JOIN employees as e
+ON c.SupportRepId=e.EmployeeId
+WHERE (e.FirstName=&quot;Jane&quot; AND e.LastName=&quot;Peacock&quot; or 
+				 e.FirstName=&quot;Margaret&quot; AND e.LastName=&quot;Park&quot;);
+
+-- DDL (CREATE, ALTER, DELETE) and DML (SELECT, INSERT, UPDATE, DELETE) Statements
+-- 1.Create a table inside the chinook database. This table tracks the employees’ courses inside the organization. 
+-- Your table should have the followings features:
+--               Name of the table: courses
+--                Columns:
+--                     CourseId (Primary Key)
+--                     CourseName (Cannot be null)
+--                     EmployeeId (Foreign Key - Refers to EmployeeId of employees table ) 
+--                     CoursePrice
+
+-- CREATE TABLE &quot;courses&quot; (
+-- 	&quot;CourseId&quot;	INTEGER,
+-- 	&quot;CourseName&quot;	VARCHAR(20) NOT NULL,
+-- 	&quot;EmployeeId&quot;	INTEGER,
+-- 	&quot;CoursePrice&quot;	INTEGER,
+-- 	PRIMARY KEY(&quot;CourseId&quot;),
+-- 	FOREIGN KEY(&quot;EmployeeId&quot;) REFERENCES &quot;employees&quot;(&quot;EmployeeId&quot;)
+-- );
+
+CREATE TABLE courses
+			(
+			CourseId INTEGER PRIMARY KEY,
+			CourseName VARCHAR(20) NOT NULL,
+			EmployeeId INTEGER,
+			CoursePrice INTEGER,
+			FOREIGN KEY (EmployeeId) REFERENCES employees (EmployeeId)
+			);
+			
+-- 2. Insert at least 5 rows into the courses table. Your EmployeeId should contain the values of the 
+-- EmployeeId column on the employees table. You’re free to choose any values for other columns 
+-- ourseId, CourseName, CoursePrice)
+
+
+INSERT INTO courses (CourseId, CourseName, EmployeeId, CoursePrice)
+VALUES (1, &quot;math&quot;, 3, 400),
+				   (2, &quot;Eng&quot;, 3, 700),
+				   (3, &quot;Let&quot;, 2, 750),
+				   (4, &quot;Fra&quot;, 1, 850);
+
+
+-- 3. Delete the last row of your courses table.
+
+DELETE FROM courses 
+WHERE  CourseId = (SELECT CourseId 
+             FROM   courses 
+             ORDER  BY CourseId DESC 
+             LIMIT  1); 
+
+-- 4. Add a new column to your courses table named StartDate. The new column cannot be null.
+SELECT * FROM customers;	
+SELECT * FROM employees;
+SELECT * FROM courses;
+
+-- ALTER TABLE courses ADD StartDate INT NULL;
+-- UPDATE courses SET INT ;
+-- ALTER TABLE courses
+-- ALTER COLUMN StartDate INT NOT NULL;
+
+-- 5. Delete the CoursePrice column.
+
+-- ALTER TABLE courses
+DROP  CoursePrice;
+
+-- Delete the courses table.
+DROP TABLE courses;
+
+--EXTRA (using tree joins)
+
+SELECT artists.ArtistId, artists.name, albums.Title, tracks.GenreId 
+FROM (artists JOIN albums ON artists.ArtistId=albums.ArtistId) 
+JOIN tracks ON (albums.AlbumId=tracks.AlbumId)
+GROUP by albums.Title
+ORDER BY artists.ArtistId ASC;
+
+
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
